@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Alert, StatusBar } from "react-native";
+import Styles from "./Styles";
 //import Insert from "../Insert/Insert";
 //import List from "../List/List";
 
@@ -46,19 +47,31 @@ export default function Home() {
         return getScreenHome();
     };
 
+    function insertScreenHome() {
+        if (nameProduct !== "" || classProduct !== "" ||
+            descriptionProduct !== "" || amountProduct !== "") {
+            Alert.alert("Os dados foram salvos!");
+        } else {
+            Alert.alert("Nenhum dado foi salvo!");
+        };
+        setScreen("Home");
+        return getScreenHome();
+    };
+
     function getScreenHome() {
         return (
-            <View>
-                <Text>Menu</Text>
-                <View>
-                    <TouchableOpacity onPress={() => setScreenInsert()}>
-                        <Text>Incluir</Text>
+            <View style={Styles.viewHome}>
+                <StatusBar backgroundColor="#000000" />
+                <Text style={Styles.titleHome}>Menu</Text>
+                <View style={Styles.viewButtons}>
+                    <TouchableOpacity style={Styles.insertButton} onPress={() => setScreenInsert()}>
+                        <Text style={Styles.insertButtonText}>Incluir</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setScreenList()}>
-                        <Text>Listar</Text>
+                    <TouchableOpacity style={Styles.listButton} onPress={() => setScreenList()}>
+                        <Text style={Styles.listButtonText}>Listar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setScreenDelete()}>
-                        <Text>Excluir</Text>
+                    <TouchableOpacity style={Styles.deleteButton} onPress={() => setScreenDelete()}>
+                        <Text style={Styles.deleteButtonText}>Excluir</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -79,27 +92,39 @@ export default function Home() {
                     <Text>Quantidade do Produto</Text>
                     <TextInput onChangeText={text => setAmountProduct(text)} />
                 </View>
-                <TouchableOpacity onPress={() => setScreenHome()}>
-                    <Text>Voltar para o Menu</Text>
+                <TouchableOpacity onPress={() => insertScreenHome()}>
+                    <Text>Concluir Inclusão</Text>
                 </TouchableOpacity>
             </View>
         );
     };
 
     function getScreenList() {
-        return (
-            <View>
-                <Text>Lista dos Produtos</Text>
+        if (nameProduct !== "" || classProduct !== "" ||
+            descriptionProduct !== "" || amountProduct !== "") {
+            return (
                 <View>
-                    <Text>Nome do Produto: {nameProduct}</Text>
-                    <Text>Classe do Produto: {classProduct}</Text>
-                    <Text>Descrição do Produto: {descriptionProduct}</Text>
-                    <Text>Quantidade do Produto: {amountProduct}</Text>
+                    <Text>Lista dos Produtos</Text>
+                    <View>
+                        <Text>Nome do Produto: {nameProduct}</Text>
+                        <Text>Classe do Produto: {classProduct}</Text>
+                        <Text>Descrição do Produto: {descriptionProduct}</Text>
+                        <Text>Quantidade do Produto: {amountProduct}</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => setScreenHome()}>
+                        <Text>Voltar para o Menu</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => setScreenHome()}>
-                    <Text>Voltar para o Menu</Text>
-                </TouchableOpacity>
-            </View>
-        );
+            );
+        } else {
+            return (
+                <View>
+                    <Text>Nenhum produto salvo</Text>
+                    <TouchableOpacity onPress={() => setScreenHome()}>
+                        <Text>Voltar para o Menu</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        };
     };
 };
